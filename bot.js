@@ -1,5 +1,5 @@
 /**
- * Telegram Bot for 2048 Game Web App — Стильная версия
+ * Telegram Bot for 2048 Game Web App — Чистая стильная версия
  */
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -8,7 +8,7 @@ require('dotenv').config();
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 const GAME_URL = process.env.GAME_URL;
 
-// Валидация
+// Валидация конфигурации
 if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes('вставь_сюда') || TELEGRAM_BOT_TOKEN === 'your_bot_token_here') {
     console.error('❌ Ошибка: Токен бота отсутствует!');
     process.exit(1);
@@ -38,19 +38,15 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     
     const welcomeMessage = `
-╔══════════════════════════════════╗
-║                                  ║
-║     🌟  2048 DUEL EDITION  🌟    ║
-║                                  ║
-╚══════════════════════════════════╝
+🌟 <b>2048 DUEL EDITION</b> 🌟
 
-🎮 <b>Классическая 2048 теперь в Telegram!</b>
+🎮 Классическая игра <b>2048</b> теперь прямо в Telegram!
 
-🔥 Объединяй плитки • Достигай 2048
-🏆 Соревнуйся с друзьями
-⚡ Играй одним пальцем
+🔥 Объединяй одинаковые плитки
+🏆 Достигай новых рекордов
+⚡ Играй в любое время
 
-👇 Выбери режим игры:
+👇 Выбери, как хочешь играть:
 `;
 
     bot.sendMessage(chatId, welcomeMessage, {
@@ -69,25 +65,25 @@ bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     
     const helpMessage = `
-╔══════════════════════════════════╗
-║           📖 КАК ИГРАТЬ          ║
-╚══════════════════════════════════╝
+📖 <b>Как играть в 2048</b>
 
-🎯 <b>Цель:</b> Достичь плитки <b>2048</b>
+🎯 <b>Цель игры:</b>
+Собери плитку с числом <b>2048</b> и больше!
 
 🕹️ <b>Управление:</b>
-• Свайп влево, вправо, вверх, вниз
+• Свайп влево ←   Свайп вправо →
+• Свайп вверх ↑    Свайп вниз ↓
 
-🏆 <b>Советы мастеров:</b>
-• Держи большую плитку в одном углу
+🏆 <b>Советы для высоких рекордов:</b>
+• Держи самую большую плитку в одном углу
 • Планируй ходы на несколько шагов вперёд
-• Старайся не заполнять всё поле
+• Не позволяй полю полностью заполниться
 
-🌐 <b>Веб-версия:</b>
+🌐 <b>Полная веб-версия:</b>
 https://raezualways.github.io/2048/
 
 ✨ <b>Команды:</b>
-/start — Начать игру
+/start — Запустить игру
 /help  — Показать помощь
 `;
 
@@ -107,5 +103,5 @@ bot.on('polling_error', (error) => {
     console.error('❌ Polling Error:', error.message || error);
 });
 
-console.log('🚀 Бот 2048 Duel Edition запущен!');
-console.log(`🎮 GAME_URL: ${GAME_URL}`);
+console.log('🚀 Бот 2048 Duel Edition успешно запущен!');
+console.log(`🎮 Web App: ${GAME_URL}`);
