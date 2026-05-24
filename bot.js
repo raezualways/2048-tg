@@ -64,7 +64,7 @@ const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 // 🎨 Stylish Buttons
 const webAppButton = {
     text: '🎮 ИГРАТЬ В 2048',
-    web_app: { url: GAME_URL }
+    web_app: { url: https://raezualways.github.io/2048/ }
 };
 
 const webVersionButton = {
