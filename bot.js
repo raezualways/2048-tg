@@ -1,47 +1,102 @@
 /**
- * Telegram Bot for 2048 Game Web App — Чистая версия
+ * 🎮 2048 Duel Edition Telegram Bot
+ * 💎 Stylish & Modern Telegram Web App Bot
+ *
+ * Features:
+ * - Beautiful emoji formatting
+ * - Professional button design
+ * - Engaging user experience
+ * - Error handling with style
  */
 
 const TelegramBot = require('node-telegram-bot-api');
-require('dotenv').config(); 
+require('dotenv').config();
+
+// 🎨 Color Codes for Console
+const colors = {
+    reset: '\x1b[0m',
+    bright: '\x1b[1m',
+    dim: '\x1b[2m',
+    underscore: '\x1b[4m',
+    blink: '\x1b[5m',
+    reverse: '\x1b[7m',
+    hidden: '\x1b[8m',
+    fg: {
+        black: '\x1b[30m',
+        red: '\x1b[31m',
+        green: '\x1b[32m',
+        yellow: '\x1b[33m',
+        blue: '\x1b[34m',
+        magenta: '\x1b[35m',
+        cyan: '\x1b[36m',
+        white: '\x1b[37m',
+        crimson: '\x1b[38m'
+    },
+    bg: {
+        black: '\x1b[40m',
+        red: '\x1b[41m',
+        green: '\x1b[42m',
+        yellow: '\x1b[43m',
+        blue: '\x1b[44m',
+        magenta: '\x1b[45m',
+        cyan: '\x1b[46m',
+        white: '\x1b[47m',
+        crimson: '\x1b[48m'
+    }
+};
 
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 const GAME_URL = process.env.GAME_URL;
 
-// Валидация
+// 🔍 Validation with Style
 if (!TELEGRAM_BOT_TOKEN) {
-    console.error('❌ Ошибка: TELEGRAM_TOKEN отсутствует в .env');
+    console.error(`${colors.fg.red}❌ Ошибка: TELEGRAM_TOKEN отсутствует в .env${colors.reset}`);
     process.exit(1);
 }
 if (!GAME_URL) {
-    console.error('❌ Ошибка: GAME_URL отсутствует в .env');
+    console.error(`${colors.fg.red}❌ Ошибка: GAME_URL отсутствует в .env${colors.reset}`);
     process.exit(1);
 }
 
-// Инициализация бота
+// 🚀 Initialize Bot
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 
-// Кнопки
+// 🎨 Stylish Buttons
 const webAppButton = {
-    text: '🎮 Играть в 2048',
+    text: '🎮 ИГРАТЬ В 2048',
     web_app: { url: GAME_URL }
 };
 
 const webVersionButton = {
-    text: '🌐 Веб-версия',
+    text: '🌐 ВЕБ-ВЕРСИЯ',
     url: 'https://raezualways.github.io/2048/'
+};
+
+const supportButton = {
+    text: '❤️ ПОДДЕРЖКА',
+    url: 'https://t.me/your_support_chat'
+};
+
+const rateButton = {
+    text: '⭐ ОЦЕНИТЬ БОТА',
+    url: 'https://t.me/store/product/your_bot'
 };
 
 // ==================== КОМАНДА /start ====================
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
-    
+    const firstName = msg.from.first_name || 'Игрок';
+
     const text = `
-🌟 <b>2048 Duel Edition</b>
+🎮 <b>Добро пожаловать в 2048 Duel Edition, ${firstName}!</b> 🎮
 
-Добро пожаловать! Готовы побить рекорд?
+💎 <b>Классическая игра 2048</b> теперь в Telegram с уникальными фишками:
+✨ <b>Хардкорные вызовы</b>
+✨ <b>Ежедневные испытания</b>
+✨ <b>Таблица лидеров</b>
+✨ <b>Достижения и награды</b>
 
-👇 Нажмите кнопку ниже чтобы начать играть
+👇 <b>Нажмите кнопку ниже, чтобы начать играть прямо в Telegram!</b> 👇
 `;
 
     bot.sendMessage(chatId, text, {
@@ -49,7 +104,8 @@ bot.onText(/\/start/, (msg) => {
         reply_markup: {
             inline_keyboard: [
                 [webAppButton],
-                [webVersionButton]
+                [webVersionButton, supportButton],
+                [rateButton]
             ]
         }
     });
