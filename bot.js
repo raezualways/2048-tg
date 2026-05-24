@@ -1,5 +1,5 @@
 /**
- * Telegram Bot for 2048 Game Web App — Чистая стильная версия
+ * Telegram Bot for 2048 Game Web App — Чистая версия
  */
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -8,14 +8,13 @@ require('dotenv').config();
 const TELEGRAM_BOT_TOKEN = process.env.TELEGRAM_TOKEN || process.env.TELEGRAM_BOT_TOKEN;
 const GAME_URL = process.env.GAME_URL;
 
-// Валидация конфигурации
-if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN.includes('вставь_сюда') || TELEGRAM_BOT_TOKEN === 'your_bot_token_here') {
-    console.error('❌ Ошибка: Токен бота отсутствует!');
+// Валидация
+if (!TELEGRAM_BOT_TOKEN) {
+    console.error('❌ Ошибка: TELEGRAM_TOKEN отсутствует в .env');
     process.exit(1);
 }
-
-if (!GAME_URL || GAME_URL.includes('вставь_сюда')) {
-    console.error('❌ Ошибка: GAME_URL отсутствует!');
+if (!GAME_URL) {
+    console.error('❌ Ошибка: GAME_URL отсутствует в .env');
     process.exit(1);
 }
 
@@ -29,7 +28,7 @@ const webAppButton = {
 };
 
 const webVersionButton = {
-    text: '🌐 Открыть веб-версию',
+    text: '🌐 Веб-версия',
     url: 'https://raezualways.github.io/2048/'
 };
 
@@ -37,19 +36,15 @@ const webVersionButton = {
 bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     
-    const welcomeMessage = `
-🌟 <b>2048 DUEL EDITION</b> 🌟
+    const text = `
+🌟 <b>2048 Duel Edition</b>
 
-🎮 Классическая игра <b>2048</b> теперь прямо в Telegram!
+Добро пожаловать! Готовы побить рекорд?
 
-🔥 Объединяй одинаковые плитки
-🏆 Достигай новых рекордов
-⚡ Играй в любое время
-
-👇 Выбери, как хочешь играть:
+👇 Нажмите кнопку ниже чтобы начать играть
 `;
 
-    bot.sendMessage(chatId, welcomeMessage, {
+    bot.sendMessage(chatId, text, {
         parse_mode: 'HTML',
         reply_markup: {
             inline_keyboard: [
@@ -57,37 +52,35 @@ bot.onText(/\/start/, (msg) => {
                 [webVersionButton]
             ]
         }
-    }).catch(err => console.error('Ошибка /start:', err.message));
+    });
+});
+
+// ==================== КОМАНДА /play ====================
+bot.onText(/\/play/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "🎮 Запускаем игру...", {
+        reply_markup: {
+            inline_keyboard: [[webAppButton]]
+        }
+    });
 });
 
 // ==================== КОМАНДА /help ====================
 bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     
-    const helpMessage = `
-📖 <b>Как играть в 2048</b>
+    const text = `
+📋 <b>Доступные команды:</b>
 
-🎯 <b>Цель игры:</b>
-Собери плитку с числом <b>2048</b> и больше!
+🎮 <b>/start</b> — Главное меню + кнопка игры
+🎮 <b>/play</b> — Быстрый запуск игры
+🌐 <b>/web</b> — Открыть веб-версию
+ℹ️ <b>/about</b> — Информация о боте
 
-🕹️ <b>Управление:</b>
-• Свайп влево ←   Свайп вправо →
-• Свайп вверх ↑    Свайп вниз ↓
-
-🏆 <b>Советы для высоких рекордов:</b>
-• Держи самую большую плитку в одном углу
-• Планируй ходы на несколько шагов вперёд
-• Не позволяй полю полностью заполниться
-
-🌐 <b>Полная веб-версия:</b>
-https://raezualways.github.io/2048/
-
-✨ <b>Команды:</b>
-/start — Запустить игру
-/help  — Показать помощь
+/help — Показать этот список
 `;
 
-    bot.sendMessage(chatId, helpMessage, {
+    bot.sendMessage(chatId, text, {
         parse_mode: 'HTML',
         reply_markup: {
             inline_keyboard: [
@@ -95,13 +88,39 @@ https://raezualways.github.io/2048/
                 [webVersionButton]
             ]
         }
-    }).catch(err => console.error('Ошибка /help:', err.message));
+    });
+});
+
+// ==================== КОМАНДА /web ====================
+bot.onText(/\/web/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, "🌐 Открыть полную версию игры:", {
+        reply_markup: {
+            inline_keyboard: [[webVersionButton]]
+        }
+    });
+});
+
+// ==================== КОМАНДА /about ====================
+bot.onText(/\/about/, (msg) => {
+    const chatId = msg.chat.id;
+    bot.sendMessage(chatId, `
+<b>2048 Duel Edition</b>
+
+Классическая игра 2048 как Telegram Web App.
+
+• Быстрые свайпы
+• Сохранение рекордов в браузере
+• Играй прямо в чате
+
+Разработано с ❤️ для Telegram
+`, { parse_mode: 'HTML' });
 });
 
 // Обработка ошибок
 bot.on('polling_error', (error) => {
-    console.error('❌ Polling Error:', error.message || error);
+    console.error('Polling Error:', error.message);
 });
 
-console.log('🚀 Бот 2048 Duel Edition успешно запущен!');
-console.log(`🎮 Web App: ${GAME_URL}`);
+console.log('🚀 Бот 2048 запущен успешно!');
+console.log(`🎮 GAME_URL: ${GAME_URL}`);
