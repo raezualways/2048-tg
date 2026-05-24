@@ -1,5 +1,5 @@
 /**
- * Telegram Bot for 2048 Game Web App
+ * Telegram Bot for 2048 Game Web App — Стильная версия
  */
 
 const TelegramBot = require('node-telegram-bot-api');
@@ -29,13 +29,12 @@ if (!GAME_URL.startsWith('https://')) {
 // Инициализация бота
 const bot = new TelegramBot(TELEGRAM_BOT_TOKEN, { polling: true });
 
-// Кнопка запуска Web App
+// Кнопки
 const webAppButton = {
     text: '🎮 Играть в 2048',
     web_app: { url: GAME_URL }
 };
 
-// Кнопка веб-версии
 const webVersionButton = {
     text: '🌐 Открыть веб-версию',
     url: 'https://raezualways.github.io/2048/'
@@ -46,15 +45,20 @@ bot.onText(/\/start/, (msg) => {
     const chatId = msg.chat.id;
     
     const welcomeMessage = `
-🌟 <b>Добро пожаловать в 2048 Duel Edition!</b> 🌟
+╔════════════════════════════════════╗
+║                                    ║
+║        🌟  2048 DUEL EDITION  🌟   ║
+║                                    ║
+╚════════════════════════════════════╝
 
-🎮 Классическая игра <b>2048</b> теперь прямо в Telegram!
+🎮 <b>Классика 2048 теперь в Telegram!</b>
 
-🔥 Собирай одинаковые плитки и достигни <b>2048</b>!
-🏆 Соревнуйся с друзьями и ставь рекорды.
+🔥 Объединяй плитки и достигай <b>2048</b>
+🏆 Соревнуйся с друзьями
+⚡ Молниеносные свайпы
 
-👇 Нажми кнопку ниже, чтобы начать играть:
-    `;
+👇 Выбери, как хочешь играть:
+`;
 
     bot.sendMessage(chatId, welcomeMessage, {
         parse_mode: 'HTML',
@@ -65,7 +69,7 @@ bot.onText(/\/start/, (msg) => {
             ]
         }
     }).catch(error => {
-        console.error('❌ Ошибка /start:', error.message);
+        console.error('❌ Ошибка при отправке /start:', error.message);
     });
 });
 
@@ -74,28 +78,31 @@ bot.onText(/\/help/, (msg) => {
     const chatId = msg.chat.id;
     
     const helpMessage = `
-📖 <b>Как играть в 2048 Duel</b>
+╔════════════════════════════════════╗
+║             📖 КАК ИГРАТЬ          ║
+╚════════════════════════════════════╝
 
-🎯 <b>Цель:</b>
-Двигай плитки, чтобы получить число <b>2048</b>!
+🎯 <b>Цель игры:</b>
+Достичь плитки <b>2048</b> и выше!
 
 🕹️ <b>Управление:</b>
-• Свайп влево, вправо, вверх, вниз
-• Одинаковые плитки объединяются
-• После каждого хода появляется новая плитка
+• Свайп влево ←
+• Свайп вправо →
+• Свайп вверх ↑
+• Свайп вниз ↓
 
-🏆 <b>Полезные советы:</b>
-• Старайся держать большую плитку в углу
-• Планируй ходы заранее
-• Не давай полю полностью заполниться
+🏆 <b>Про-советы:</b>
+• Держи самую большую плитку в углу
+• Планируй на 2–3 хода вперёд
+• Не заполняй поле полностью
 
-🌐 <b>Также можешь играть в полной веб-версии:</b>
+🌐 <b>Полная веб-версия:</b>
 https://raezualways.github.io/2048/
 
-✨ <b>Команды:</b>
-/start — Запустить игру
-/help — Показать помощь
-    `;
+✨ <b>Команды бота:</b>
+/start — Начать игру
+/help  — Показать помощь
+`;
 
     bot.sendMessage(chatId, helpMessage, {
         parse_mode: 'HTML',
@@ -106,14 +113,19 @@ https://raezualways.github.io/2048/
             ]
         }
     }).catch(error => {
-        console.error('❌ Ошибка /help:', error.message);
+        console.error('❌ Ошибка при отправке /help:', error.message);
     });
 });
 
-// Перехват ошибок
+// Глобальная обработка ошибок
 bot.on('polling_error', (error) => {
-    console.error('❌ Поллинг-ошибка:', error.message || error);
+    console.error('❌ Polling Error:', error.message || error);
 });
 
-console.log('🚀 Бот 2048 успешно запущен!');
-console.log(`🎮 GAME_URL: ${GAME_URL}`);
+bot.on('error', (error) => {
+    console.error('❌ Бот ошибка:', error.message || error);
+});
+
+console.log('🚀 Бот 2048 Duel Edition успешно запущен!');
+console.log(`🎮 Web App URL: ${GAME_URL}`);
+console.log('🌐 Веб-версия: https://raezualways.github.io/2048/');
